@@ -1,8 +1,8 @@
 {
-  "name": "firebot-custom-script-starter",
-  "scriptOutputName": "starterScript",
+  "name": "enhanced-tts",
+  "scriptOutputName": "enhancedTts",
   "version": "1.0.0",
-  "description": "A starter Firebot custom script",
+  "description": "A enhanced TTS effect using Amazon Polly for Firebot",
   "main": "",
   "scripts": {
     "build": "webpack",

@@ -1,32 +1,28 @@
 import { Firebot } from "firebot-custom-scripts-types";
+import { buildEnhancedTtsEffectType } from "./enhanced-tts-effect";
 
-interface Params {
-  message: string;
-}
+interface Params {}
 
 const script: Firebot.CustomScript<Params> = {
   getScriptManifest: () => {
     return {
-      name: "Starter Custom Script",
-      description: "A starter custom script for build",
-      author: "SomeDev",
-      version: "1.0",
+      name: "Enhanced TTS Effect",
+      description: "Adds an enhanced TSS effect",
+      author: "ebiggz",
+      version: "1.3",
       firebotVersion: "5",
+      startupOnly: true,
     };
   },
   getDefaultParameters: () => {
-    return {
-      message: {
-        type: "string",
-        default: "Hello World!",
-        description: "Message",
-        secondaryDescription: "Enter a message here",
-      },
-    };
+    return {};
   },
   run: (runRequest) => {
-    const { logger } = runRequest.modules;
-    logger.info(runRequest.parameters.message);
+    const { effectManager, frontendCommunicator } = runRequest.modules;
+    const request = (runRequest.modules as any).request;
+    effectManager.registerEffect(
+      buildEnhancedTtsEffectType(request, frontendCommunicator)
+    );
   },
 };
 
