@@ -92,7 +92,7 @@ export function buildEnhancedTtsEffectType(
                     format: "ogg",
                     filepath: body.speak_url,
                   });
-                  wait(duration * 1000).then(() => {
+                  wait((duration + 1.5) * 1000).then(() => {
                     resolve(true);
                   });
                 });
