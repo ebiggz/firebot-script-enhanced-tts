@@ -13,7 +13,8 @@ const wait = (ms: number) => {
 interface EffectModel {
   text: string;
   voiceName: string;
-  voiceMode: "selected" | "random";
+  customVoiceName: string;
+  voiceMode: "selected" | "random" | "custom";
   volume: number;
   audioOutputDevice: any;
 }
@@ -50,7 +51,7 @@ export function buildEnhancedTtsEffectType(
 
             <eos-container header="Voice" pad-top="true">
                 <firebot-radios 
-                  options="{ selected: 'Selected voice', random: 'Random Voice'}"
+                  options="{ selected: 'Selected voice', random: 'Random Voice', custom: 'Custom Voice' }"
                   model="effect.voiceMode"
                   inline="true"
                   style="padding-bottom: 5px;" 
@@ -60,7 +61,12 @@ export function buildEnhancedTtsEffectType(
                   options="voices"
                   selected="effect.voiceName"
                   on-update="setVoiceName(option)"
-              />
+                />
+                <firebot-input
+                  ng-if="effect.voiceMode == 'custom'"
+                  model="effect.customVoiceName" 
+                  placeholder-text="Enter voice name" 
+                />
             </eos-container>
       
             <eos-container header="Volume" pad-top="true">
@@ -130,7 +136,14 @@ export function buildEnhancedTtsEffectType(
         ];
 
         const voiceMode = effect.voiceMode ?? "selected";
-        const voice = (effect.voiceMode == "random" ? voices[getRandomInt(0, voices.length - 1)] : effect.voiceName) || "Brian";
+        let voice = (voiceMode == "random" ? voices[getRandomInt(0, voices.length - 1)] : effect.voiceName) || "Brian";
+        if(voiceMode === "custom") {
+          if(voices.includes(effect.customVoiceName)) {
+            voice = effect.customVoiceName;
+          } else {
+            voice = "Brian";
+          }
+        }
 
         request.post(
           "https://streamlabs.com/polly/speak",
