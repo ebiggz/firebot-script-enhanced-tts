@@ -9,7 +9,7 @@ const script: Firebot.CustomScript<Params> = {
       name: "Enhanced TTS Effect",
       description: "Adds an enhanced TSS effect",
       author: "ebiggz",
-      version: "1.3",
+      version: "1.4",
       firebotVersion: "5",
       startupOnly: true,
     };

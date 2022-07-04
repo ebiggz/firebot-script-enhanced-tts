@@ -1,11 +1,19 @@
 import { Firebot, ScriptModules } from "firebot-custom-scripts-types";
 
+const getRandomInt = (min: number, max: number) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 const wait = (ms: number) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 interface EffectModel {
   text: string;
+  voiceName: string;
+  voiceMode: "selected" | "random";
   volume: number;
   audioOutputDevice: any;
 }
@@ -39,6 +47,21 @@ export function buildEnhancedTtsEffectType(
             <eos-container header="Text">
                 <textarea ng-model="effect.text" class="form-control" name="text" placeholder="Enter text" rows="4" cols="40" replace-variables menu-position="under"></textarea>
             </eos-container>
+
+            <eos-container header="Voice" pad-top="true">
+                <firebot-radios 
+                  options="{ selected: 'Selected voice', random: 'Random Voice'}"
+                  model="effect.voiceMode"
+                  inline="true"
+                  style="padding-bottom: 5px;" 
+                 />
+                <firebot-select
+                  ng-if="effect.voiceMode == 'selected'"
+                  options="voices"
+                  selected="effect.voiceName"
+                  on-update="setVoiceName(option)"
+              />
+            </eos-container>
       
             <eos-container header="Volume" pad-top="true">
                 <div class="volume-slider-wrapper">
@@ -54,6 +77,31 @@ export function buildEnhancedTtsEffectType(
       if ($scope.effect.volume == null) {
         $scope.effect.volume = 10;
       }
+      if ($scope.effect.voiceName == null) {
+        $scope.effect.voiceName = "Brian";
+      }
+      if ($scope.effect.voiceMode == null) {
+        $scope.effect.voiceMode = "selected";
+      }
+
+      $scope.voices = [
+        "Brian",
+        "Ivy",
+        "Justin",
+        "Russell",
+        "Nicole",
+        "Emma",
+        "Amy",
+        "Joanna",
+        "Salli",
+        "Kimberly",
+        "Kendra",
+        "Joey"
+      ];
+
+      $scope.setVoiceName = (name: string) => {
+        $scope.effect.voiceName = name;
+      }
     },
     optionsValidator: (effect) => {
       let errors = [];
@@ -66,12 +114,30 @@ export function buildEnhancedTtsEffectType(
       return new Promise((resolve) => {
         const effect = event.effect;
 
+        const voices = [
+          "Brian",
+          "Ivy",
+          "Justin",
+          "Russell",
+          "Nicole",
+          "Emma",
+          "Amy",
+          "Joanna",
+          "Salli",
+          "Kimberly",
+          "Kendra",
+          "Joey"
+        ];
+
+        const voiceMode = effect.voiceMode ?? "selected";
+        const voice = (effect.voiceMode == "random" ? voices[getRandomInt(0, voices.length - 1)] : effect.voiceName) || "Brian";
+
         request.post(
           "https://streamlabs.com/polly/speak",
           {
             json: {
               service: "Polly",
-              voice: "Brian",
+              voice: voice,
               text: effect.text,
             },
           },
