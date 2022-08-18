@@ -1,4 +1,9 @@
-# OBS Control Script for Firebot
+# Enhanced TTS Effect for Firebot
+Adds a new effect that utilizes the Streamlabs API to generate TTS (Streamlabs uses Amazon Polly)
+
+> **Note**: Becuase this uses an undocumented Streamlabs API endpoint, there is no telling when or if this will stop working.
+> Additionally, Streamlabs appears to rate limit this endpoint if used too fequently from the same IP. If you run into this issue, 
+> you may want to use the Amazon Polly TTS integration built into Firebot instead.
 
 ## How to use
 1. Download the latest **enhancedTts.js** file from [Releases](https://github.com/ebiggz/firebot-script-enhanced-tts/releases)
